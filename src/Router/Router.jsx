@@ -5,6 +5,7 @@ import Layout from '../components/Layout/Layout'
 import Home from '../pages/Home/Home'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import MenuCard from '../components/MenuCard'
+import AboutUs from '../pages/Home/AboutUs'
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,11 @@ const router = createBrowserRouter([
       {
         path:'menu',
         element: <MenuCard></MenuCard>
+      },
+      {
+        path: 'about',
+        element: <AboutUs />
       }
-     
     ]
   }
 ])
