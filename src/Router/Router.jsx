@@ -7,6 +7,7 @@ import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import MenuCard from '../components/MenuCard'
 import AboutUs from '../pages/Home/AboutUs'
 import Blog from '../pages/Home/Blog'
+import SpecialOffer from '../pages/Home/SpecialOffer'
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: 'blog',
         element: <Blog />
+      },
+      {
+        path: 'offers',
+        element: <SpecialOffer />
       }
     ]
   }
