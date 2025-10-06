@@ -1,16 +1,14 @@
 import { Outlet } from 'react-router-dom'
 import NavBar from '../NavBar'
+import Hero from '../Hero'
 
 const Layout = () => {
   return (
     <div className="min-h-screen bg-gray-50 w-11/12 mx-auto flex flex-col">
       <header className="bg-white shadow-sm">
-        {/* <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-bold text-gray-900">AI Smart Restaurant</h1>
-          </div>
-        </nav> */}
+       
         <NavBar></NavBar>
+        <Hero></Hero>
       </header>
       
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
