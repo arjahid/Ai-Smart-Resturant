@@ -5,7 +5,7 @@ import Hero from '../Hero'
 const Layout = () => {
   return (
     <div className="min-h-screen bg-gray-50 w-11/12 mx-auto flex flex-col">
-      <header className="bg-white shadow-sm">
+      {/* <header className="bg-white shadow-sm">
        
         <NavBar></NavBar>
         <Hero></Hero>
@@ -19,7 +19,8 @@ const Layout = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p>&copy; 2024 AI Smart Restaurant. All rights reserved.</p>
         </div>
-      </footer>
+      </footer> */}
+      <Outlet></Outlet>
     </div>
   )
 }

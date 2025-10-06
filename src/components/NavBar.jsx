@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const NavBar = () => {
   return (
@@ -13,18 +14,27 @@ const NavBar = () => {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-slate-800 rounded-box z-[1] mt-3 w-60 p-2 shadow-xl border border-slate-600">
-            <li><a className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</a></li>
-            <li><a className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</a></li>
-            <li><a className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</a></li>
-            <li><a className="text-white hover:bg-slate-700 hover:text-orange-400">📊 Analytics</a></li>
-            <li><a className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Settings</a></li>
+            <NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink>
+            <NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink>
+            <NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</NavLink>
+            <NavLink to="/analytics" className="text-white hover:bg-slate-700 hover:text-orange-400">📊 Analytics</NavLink>
+            <NavLink to="/settings" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Settings</NavLink>
           </ul>
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost text-2xl font-bold text-white hover:text-orange-400 normal-case">
+        <a className="btn btn-ghost text-2xl font-bold text-white hover:text-orange-400 normal-case mr-8">
           <span className="text-orange-400">🤖</span> AI Smart Restaurant
         </a>
+        <div className="hidden lg:flex">
+          <ul className="menu menu-horizontal px-1 space-x-2">
+            <li><NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🏠 Home</NavLink></li>
+            <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🍽️ Menu</NavLink></li>
+            <li><NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📋 Orders</NavLink></li>
+            <li><NavLink to="/analytics" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📊 Analytics</NavLink></li>
+            <li><NavLink to="/settings" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">⚙️ Settings</NavLink></li>
+          </ul>
+        </div>
       </div>
       <div className="navbar-end space-x-2">
         <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Search Menu">

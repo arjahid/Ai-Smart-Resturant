@@ -4,6 +4,7 @@ import {
 import Layout from '../components/Layout/Layout'
 import Home from '../pages/Home/Home'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
+import MenuCard from '../components/MenuCard'
 
 const router = createBrowserRouter([
   {
@@ -12,9 +13,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
+        path: '/',
         element: <Home />,
       },
+      {
+        path:'menu',
+        element: <MenuCard></MenuCard>
+      }
      
     ]
   }
