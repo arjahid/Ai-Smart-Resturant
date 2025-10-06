@@ -7,17 +7,7 @@ const AboutUs = () => {
             
             {/* Hero Section */}
             <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-12 sm:py-16 relative">
-                <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-                    <NavLink 
-                        to="/"
-                        className="flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 border border-slate-600 hover:border-orange-400"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                        <span className="font-medium">Back</span>
-                    </NavLink>
-                </div>
+               
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">About AI Smart Restaurant</h1>
                     <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">

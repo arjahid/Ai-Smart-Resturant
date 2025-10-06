@@ -6,6 +6,7 @@ import Home from '../pages/Home/Home'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import MenuCard from '../components/MenuCard'
 import AboutUs from '../pages/Home/AboutUs'
+import Blog from '../pages/Home/Blog'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: 'about',
         element: <AboutUs />
+      },
+      {
+        path: 'blog',
+        element: <Blog />
       }
     ]
   }
