@@ -81,46 +81,63 @@ const MenuCard = () => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                            {menuData.map(item => (
-                                <div key={item.id} className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                                    {/* Image placeholder or actual image */}
-                                    <div className="relative h-48 bg-gradient-to-br from-orange-100 to-red-100">
-                                        {item.image ? (
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <span className="text-4xl">🍽️</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h3>
-                                        {item.description && (
-                                            <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-                                        )}
-                                        {item.category && (
-                                            <div className="mb-4">
-                                                <span className="text-xs font-medium text-orange-600 uppercase tracking-wide bg-orange-100 px-2 py-1 rounded-full">
-                                                    {item.category}
-                                                </span>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center justify-between">
-                                            {item.price && (
-                                                <span className="text-2xl font-bold text-orange-600">৳{item.price}</span>
+                            {menuData.map(item => {
+                                const discount = Number(item.discount) || 0;
+                                const original = Number(item.price) || 0;
+                                const discounted = original - (original * discount / 100);
+                                return (
+                                    <div key={item.id} className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                                        {/* Image placeholder or actual image */}
+                                        <div className="relative h-48 bg-gradient-to-br from-orange-100 to-red-100">
+                                            {item.image ? (
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <span className="text-4xl">🍽️</span>
+                                                </div>
                                             )}
-                                            <button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium transform hover:scale-105">
-                                                Add to Cart
-                                            </button>
+                                            {discount > 0 && (
+                                                <div className="absolute top-4 right-4">
+                                                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow">
+                                                        -{discount}%
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        <div className="p-6 flex flex-col">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h3>
+                                            {item.description && (
+                                                <p className="text-gray-600 text-sm mb-4">{item.description}</p>
+                                            )}
+                                            {item.category && (
+                                                <div className="mb-4">
+                                                    <span className="text-xs font-medium text-orange-600 uppercase tracking-wide bg-orange-100 px-2 py-1 rounded-full">
+                                                        {item.category}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <div className="mt-auto flex items-center justify-between">
+                                                {original > 0 && discount > 0 ? (
+                                                    <div className="flex items-baseline space-x-3">
+                                                        <span className="text-base text-gray-500 line-through">৳{original.toFixed(2)}</span>
+                                                        <span className="text-2xl font-bold text-orange-600">৳{discounted.toFixed(2)}</span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-2xl font-bold text-orange-600">৳{original.toFixed(2)}</span>
+                                                )}
+                                                <button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium transform hover:scale-105">
+                                                    Add to Cart
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>
