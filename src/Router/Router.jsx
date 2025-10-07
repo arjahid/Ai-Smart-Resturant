@@ -8,6 +8,7 @@ import MenuCard from '../components/MenuCard'
 import AboutUs from '../pages/Home/AboutUs'
 import Blog from '../pages/Home/Blog'
 import SpecialOffer from '../pages/Home/SpecialOffer'
+import AddMenu from '../pages/AddMenu'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: 'offers',
         element: <SpecialOffer />
+      },
+      {
+        path:'addmenu',
+        element:<AddMenu></AddMenu>
       }
     ]
   }
