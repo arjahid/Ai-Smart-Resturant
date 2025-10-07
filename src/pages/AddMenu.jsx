@@ -13,7 +13,8 @@ const AddMenu = () => {
     price: '',
     image: '',
     isAvailable: true,
-    aiTags: '' // user enters: low-calorie, healthy, vegetarian
+    aiTags: '',
+    discount: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +30,7 @@ const AddMenu = () => {
     if (!form.name.trim()) return 'Name is required';
     if (!form.category) return 'Please select a category';
     if (!form.price || Number(form.price) <= 0) return 'Price must be a positive number';
+    if (form.discount !== '' && (Number(form.discount) < 0 || Number(form.discount) > 100)) return 'Discount must be between 0 and 100';
     return null;
   };
 
@@ -48,6 +50,7 @@ const AddMenu = () => {
         description: form.description.trim(),
         category: form.category,
         price: Number(form.price),
+        discount: form.discount === '' ? 0 : Number(form.discount),
         image: form.image?.trim() || null,
         isAvailable: !!form.isAvailable,
         aiTags: form.aiTags
@@ -106,11 +109,19 @@ const AddMenu = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image Link</label>
-            <input name="image" value={form.image} onChange={handleChange}
-              placeholder="https://i.ibb.co/7KQmR7v/caesar-salad.jpg"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+              <input name="discount" value={form.discount} onChange={handleChange} type="number" step="0.1" min="0" max="100"
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image Link</label>
+              <input name="image" value={form.image} onChange={handleChange}
+                placeholder="https://i.ibb.co/7KQmR7v/caesar-salad.jpg"
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+            </div>
           </div>
 
           <div className="flex items-center space-x-4">
