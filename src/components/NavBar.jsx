@@ -1,7 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import useCart from '../Hooks/useCart';
 
 const NavBar = () => {
+  const {cart,refetch}=useCart();
+  console.log('your cart',cart);
   return (
     <div className="navbar bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg text-white">
       <div className="navbar-start">
@@ -17,7 +20,7 @@ const NavBar = () => {
             <NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink>
             <NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink>
             <NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</NavLink>
-            <NavLink to="/analytics" className="text-white hover:bg-slate-700 hover:text-orange-400">📊 Analytics</NavLink>
+            <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
             <NavLink to="/settings" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Settings</NavLink>
           </ul>
         </div>
@@ -31,7 +34,7 @@ const NavBar = () => {
             <li><NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🏠 Home</NavLink></li>
             <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🍽️ Menu</NavLink></li>
             <li><NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📋 Orders</NavLink></li>
-            <li><NavLink to="/analytics" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📊 Analytics</NavLink></li>
+            <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">➕ Add Menu</NavLink></li>
             <li><NavLink to="/settings" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">⚙️ Settings</NavLink></li>
           </ul>
         </div>
@@ -47,7 +50,7 @@ const NavBar = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m4.5-5a1 1 0 100 2 1 1 0 000-2zm7 0a1 1 0 100 2 1 1 0 000-2z" /> 
             </svg>
-            <span className="badge badge-sm badge-warning indicator-item text-slate-900 font-semibold">3</span>
+            <span className="badge badge-sm badge-warning indicator-item text-slate-900 font-semibold">{cart.length}</span>
           </div>
         </button>
         <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications">
