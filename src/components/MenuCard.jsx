@@ -43,7 +43,7 @@ const MenuCard = () => {
     );
   }
   const handleCart = (item) => {
-    const cartItem={productId:item._id, name: item.name, price: item.price, image: item.image, quantity: 1};
+    const cartItem={productId:item._id, name: item.name, price: item.price, image: item.image, discount: item.discount, quantity: 1};
     axiosPublic.post('/menucart', cartItem )
     .then((res) => {
         refetch();
