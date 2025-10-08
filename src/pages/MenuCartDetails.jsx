@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import useCart from '../Hooks/useCart';
 import useAxiosPublic from '../Hooks/AxiousPublic';
 import { MdDelete } from "react-icons/md";
+import Swal from 'sweetalert2';
 
 const MenuCartDetails = () => {
 	// support multiple return shapes from useCart
@@ -60,12 +61,36 @@ const MenuCartDetails = () => {
 
 	const handleRemove = async (cartIdOrItemId) => {
 		if (!cartIdOrItemId) return;
+
+		const result = await Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		});
+
+		if (!result.isConfirmed) return;
+
 		try {
 			setRemovingId(cartIdOrItemId);
 			await axiosPublic.delete(`/menucart/${cartIdOrItemId}`); // adjust endpoint if needed
 			if (typeof refetch === 'function') await refetch();
+
+			await Swal.fire({
+				title: 'Deleted!',
+				text: 'Item removed from cart.',
+				icon: 'success'
+			});
 		} catch (err) {
 			console.error('Failed to remove item from cart:', err);
+			await Swal.fire({
+				title: 'Error',
+				text: err?.response?.data?.message || 'Failed to remove item. Try again.',
+				icon: 'error'
+			});
 		} finally {
 			setRemovingId(null);
 		}

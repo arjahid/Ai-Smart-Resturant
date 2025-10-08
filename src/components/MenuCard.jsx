@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import NavBar from "./NavBar";
 import useAxiosPublic from "../Hooks/AxiousPublic";
 import useCart from "../Hooks/useCart";
+import Swal from "sweetalert2";
 
 const MenuCard = () => {
     const {refetch}=useCart();
@@ -47,7 +48,11 @@ const MenuCard = () => {
     axiosPublic.post('/menucart', cartItem )
     .then((res) => {
         refetch();
-      console.log("Added to cart:", res.data);
+      Swal.fire({
+  title: "Item added to cart!",
+  icon: "success",
+  draggable: true
+});
     })
     .catch((err) => {
       console.error("Error adding to cart:", err);
