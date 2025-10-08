@@ -10,6 +10,8 @@ import Blog from '../pages/Home/Blog'
 import SpecialOffer from '../pages/Home/SpecialOffer'
 import AddMenu from '../pages/AddMenu'
 import MenuCartDetails from '../pages/MenuCartDetails'
+import ChefDashboard from '../pages/Dashboard/ChefDashboard'
+import OrderCard from '../components/OrderCard'
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path:'cart',
         element:<MenuCartDetails></MenuCartDetails>
+      },
+      {
+        path:'chefdashboard',
+        element:<ChefDashboard></ChefDashboard>
+      },
+      {
+        path:'orders',
+        element:<OrderCard></OrderCard>
       }
     ]
   }
