@@ -8,11 +8,11 @@ import NavBar from '../components/NavBar';
 
 const MenuCartDetails = () => {
 	// support multiple return shapes from useCart
-	const hookResult = useCart();
-	const cart = hookResult?.cart ?? (Array.isArray(hookResult) ? hookResult[0] : []);
-	const refetch = hookResult?.refetch ?? hookResult?.ref ?? (Array.isArray(hookResult) ? hookResult[1] : undefined);
-	const isLoading = hookResult?.isLoading ?? false;
-	const error = hookResult?.error ?? null;
+	const cartData = useCart();
+	const cart = cartData?.cart ?? (Array.isArray(cartData) ? cartData[0] : []);
+	const refetch = cartData?.refetch ?? cartData?.ref ?? (Array.isArray(cartData) ? cartData[1] : undefined);
+	const isLoading = cartData?.isLoading ?? false;
+	const error = cartData?.error ?? null;
 
 	const axiosPublic = useAxiosPublic();
 	const [removingId, setRemovingId] = useState(null);
@@ -138,6 +138,40 @@ const MenuCartDetails = () => {
 			</div>
 		);
 	}
+  const handleOrder = async () => {
+  const { cart } = cartData; // Destructure from your hook or state
+
+  console.log('Ordering item:', cart);
+
+  // Prepare order data
+  const orderData = {
+    items: cart.map(item => ({
+      id: item._id || item.id,   // use _id if coming from MongoDB
+      name: item.name,
+      quantity: item.quantity || 1,
+      price: item.price,
+      discount: item.discount || 0
+    })),
+    totalPrice: cart.reduce(
+      (acc, item) => acc + item.price * (item.quantity || 1),
+      0
+    ),
+    orderDate: new Date().toISOString()
+  };
+
+  try {
+    const res = await axiosPublic.post('/orders', orderData);
+    Swal.fire({
+  title: "Order placed successfully!",
+  icon: "success",
+  draggable: true
+});
+  } catch (error) {
+    console.error('❌ Failed to place order:', error);
+    alert('Failed to place order!');
+  }
+};
+
 
 	return (
 		<div className="min-h-screen bg-gray-50 py-8">
@@ -269,10 +303,10 @@ const MenuCartDetails = () => {
 						</button>
 
 						<button
-							onClick={() => typeof refetch === 'function' && refetch()}
-							className="mt-3 w-full text-sm border border-gray-200 py-2 rounded text-gray-700 hover:bg-gray-50"
+							onClick={handleOrder}
+							className="mt-3 w-full border border-gray-200 bg-gradient-to-r rounded-lg from-orange-500 to-red-500 py-2 text-white hover:to-red-800 font-bold text-xl"
 						>
-							Refresh Cart
+							Place Order
 						</button>
 					</div>
 				</div>
