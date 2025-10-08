@@ -4,6 +4,7 @@ import useCart from '../Hooks/useCart';
 import useAxiosPublic from '../Hooks/AxiousPublic';
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
+import NavBar from '../components/NavBar';
 
 const MenuCartDetails = () => {
 	// support multiple return shapes from useCart
@@ -140,7 +141,8 @@ const MenuCartDetails = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50 py-8">
-			<div className="max-w-5xl mx-auto px-4">
+            <NavBar></NavBar>
+			<div className="max-w-5xl mx-auto px-4 mt-4">
 				{/* Top bar with back button */}
 				<div className="flex items-center justify-between mb-6">
 					<div className="flex items-center space-x-4">
