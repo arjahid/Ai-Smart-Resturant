@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import NavBar from '../../components/NavBar';
 import useOrder from '../../Hooks/useOrder';
 import { NavLink } from 'react-router-dom';
@@ -9,6 +9,44 @@ const ChefDashboard = () => {
 	const { orders = [], refetch } = useOrder() || { orders: [], refetch: null };
 	const axiosPublic = useAxiosPublic();
 	const [updatingId, setUpdatingId] = useState(null);
+
+	// keep previous statuses to detect transitions (e.g. -> completed)
+	const prevStatusRef = useRef(new Map());
+
+	// notify when an order changes to "completed"
+	useEffect(() => {
+		const prevMap = prevStatusRef.current;
+		const currentIds = new Set();
+
+		orders.forEach((o) => {
+			const id = o._id || o.id;
+			if (!id) return;
+			currentIds.add(id);
+			const prevStatus = prevMap.get(id);
+			const currStatus = (o.status || '').toLowerCase();
+
+			// only notify when we had a previous status and it transitions to completed
+			if (prevStatus && prevStatus !== 'completed' && currStatus === 'completed') {
+				Swal.fire({
+					title: 'Order Completed',
+					text: `Order #${String(id).slice(0, 8)} is completed.`,
+					icon: 'success',
+					toast: true,
+					position: 'top-end',
+					timer: 3000,
+					showConfirmButton: false,
+				});
+			}
+
+			// update map
+			prevMap.set(id, currStatus);
+		});
+
+		// remove any ids that no longer exist
+		for (const k of Array.from(prevMap.keys())) {
+			if (!currentIds.has(k)) prevMap.delete(k);
+		}
+	}, [orders]);
 
 	// safe counts
 	const { total, pending, preparing, completed } = useMemo(() => {

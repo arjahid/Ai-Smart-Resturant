@@ -15,6 +15,7 @@ const MenuCartDetails = () => {
 	const error = cartData?.error ?? null;
 
 	const axiosPublic = useAxiosPublic();
+	const [placingOrder, setPlacingOrder] = useState(false);
 	const [removingId, setRemovingId] = useState(null);
 	const [paying, setPaying] = useState(false);
 	const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -138,39 +139,64 @@ const MenuCartDetails = () => {
 			</div>
 		);
 	}
-  const handleOrder = async () => {
-  const { cart } = cartData; // Destructure from your hook or state
+	const handleOrder = async () => {
+		if (itemsWithPrices.length === 0) {
+			return Swal.fire('Cart empty', 'Add items to cart before placing an order.', 'info');
+		}
 
-  console.log('Ordering item:', cart);
+		const confirm = await Swal.fire({
+			title: 'Place order?',
+			text: `This will create an order and clear your current cart (${itemsWithPrices.length} items). Proceed?`,
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'Yes, place order'
+		});
+		if (!confirm.isConfirmed) return;
 
-  // Prepare order data
-  const orderData = {
-    items: cart.map(item => ({
-      id: item._id || item.id,   // use _id if coming from MongoDB
-      name: item.name,
-      quantity: item.quantity || 1,
-      price: item.price,
-      discount: item.discount || 0
-    })),
-    totalPrice: cart.reduce(
-      (acc, item) => acc + item.price * (item.quantity || 1),
-      0
-    ),
-    orderDate: new Date().toISOString()
-  };
+		setPlacingOrder(true);
+		try {
+			const orderPayload = {
+				items: itemsWithPrices.map(it => ({
+					id: it.id,
+					name: it.name,
+					qty: it.qty,
+					price: it.original,
+					discount: it.discount,
+					image: it.image || null
+				})),
+				total: totals.totalAfterDiscount,
+				createdAt: new Date().toISOString()
+			};
 
-  try {
-    const res = await axiosPublic.post('/orders', orderData);
-    Swal.fire({
-  title: "Order placed successfully!",
-  icon: "success",
-  draggable: true
-});
-  } catch (error) {
-    console.error('❌ Failed to place order:', error);
-    alert('Failed to place order!');
-  }
-};
+			const res = await axiosPublic.post('/orders', orderPayload);
+			if (!(res.status >= 200 && res.status < 300)) {
+				throw new Error('Order creation failed');
+			}
+
+			// Try bulk clear cart endpoint first
+			try {
+				await axiosPublic.delete('/menucart'); // backend may clear all cart items
+			} catch (bulkErr) {
+				// fallback: delete each cart entry individually
+				await Promise.all(
+					itemsWithPrices.map(it => {
+						const idToDelete = it.cartId || it.id;
+						if (!idToDelete) return Promise.resolve();
+						return axiosPublic.delete(`/menucart/${idToDelete}`).catch(()=>{});
+					})
+				);
+			}
+
+			if (typeof refetch === 'function') await refetch();
+
+			await Swal.fire('Order placed', 'Your order has been placed and cart cleared.', 'success');
+		} catch (err) {
+			console.error('Place order failed', err);
+			await Swal.fire('Error', err?.response?.data?.message || err.message || 'Failed to place order', 'error');
+		} finally {
+			setPlacingOrder(false);
+		}
+	};
 
 
 	return (
@@ -304,9 +330,10 @@ const MenuCartDetails = () => {
 
 						<button
 							onClick={handleOrder}
-							className="mt-3 w-full border border-gray-200 bg-gradient-to-r rounded-lg from-orange-500 to-red-500 py-2 text-white hover:to-red-800 font-bold text-xl"
+							disabled={placingOrder || itemsWithPrices.length === 0}
+							className="mt-3 w-full border border-gray-200 bg-gradient-to-r rounded-lg from-orange-500 to-red-500 py-2 text-white hover:to-red-800 font-bold text-xl disabled:opacity-60"
 						>
-							Place Order
+							{placingOrder ? 'Placing Order...' : 'Place Order'}
 						</button>
 					</div>
 				</div>
