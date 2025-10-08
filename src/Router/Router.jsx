@@ -9,6 +9,7 @@ import AboutUs from '../pages/Home/AboutUs'
 import Blog from '../pages/Home/Blog'
 import SpecialOffer from '../pages/Home/SpecialOffer'
 import AddMenu from '../pages/AddMenu'
+import MenuCartDetails from '../pages/MenuCartDetails'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path:'addmenu',
         element:<AddMenu></AddMenu>
+      },
+      {
+        path:'cart',
+        element:<MenuCartDetails></MenuCartDetails>
       }
     ]
   }

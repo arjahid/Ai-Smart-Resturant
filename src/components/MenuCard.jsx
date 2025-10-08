@@ -43,7 +43,8 @@ const MenuCard = () => {
     );
   }
   const handleCart = (item) => {
-    axiosPublic.post('/menucard', { itemId: item })
+    const cartItem={productId:item._id, name: item.name, price: item.price, image: item.image, quantity: 1};
+    axiosPublic.post('/menucart', cartItem )
     .then((res) => {
         refetch();
       console.log("Added to cart:", res.data);
@@ -171,7 +172,7 @@ const MenuCard = () => {
                             ৳{original.toFixed(2)}
                           </span>
                         )}
-                        <button onClick={()=>handleCart(item._id)} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium transform hover:scale-105">
+                        <button onClick={()=>handleCart(item)} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium transform hover:scale-105">
                           Add to Cart
                         </button>
                       </div>
