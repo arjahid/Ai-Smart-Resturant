@@ -9,7 +9,7 @@ const useRole = () => {
   const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
-    // যদি user না থাকে তাহলে কিছুই করব না
+    
     if (!user?.email) return;
 
     const fetchRole = async () => {
