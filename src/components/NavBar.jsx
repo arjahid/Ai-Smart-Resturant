@@ -36,7 +36,7 @@ const NavBar = () => {
             <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🍽️ Menu</NavLink></li>
             <li><NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📋 Orders</NavLink></li>
             <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">➕ Add Menu</NavLink></li>
-            <li><NavLink to="/settings" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">⚙️ Settings</NavLink></li>
+            <li><NavLink to="/login" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">⚙️ Settings</NavLink></li>
           </ul>
         </div>
       </div>
