@@ -14,6 +14,7 @@ import ChefDashboard from '../pages/Dashboard/ChefDashboard'
 import OrderCard from '../components/OrderCard'
 import Login from '../pages/Login'
 import Register from '../pages/Home/Register'
+import Profile from '../pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path:'register',
         element:<Register></Register>
+      },
+      {
+        path:'profile',
+        element:<Profile></Profile>
       }
     ]
   }
