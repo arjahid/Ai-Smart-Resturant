@@ -2,18 +2,23 @@ import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useCart from '../Hooks/useCart';
 import { CiShoppingCart } from "react-icons/ci";
-import AllUser from '../Hooks/AllUser';
-import AuthProvider, { AuthContext } from './provider/AuthProvider';
+import { AuthContext } from './provider/AuthProvider';
 
 const NavBar = () => {
   const {cart,refetch}=useCart();
-  const {users}=AllUser();
-  const navigate=useNavigate();
-  const {signOut}=useContext(AuthContext);
- const handleSignOut=()=>{
-  signOut();
-  // navigate('/login');
- }
+  const navigate = useNavigate();
+  const { user, signOut } = useContext(AuthContext);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+      console.log('User signed out successfully');
+    } catch (err) {
+      console.error('Sign out failed', err);
+    }
+  };
+
   return (
     <div className="navbar bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg text-white">
       <div className="navbar-start">
@@ -49,18 +54,23 @@ const NavBar = () => {
         </div>
       </div>
       <div className="navbar-end space-x-2">
-        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Search Menu">
+        {/* search */}
+        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Search Menu" aria-label="Search">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /> 
           </svg>
         </button>
-        <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Orders" aria-label="View cart">
+
+        {/* cart */}
+        <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Cart" aria-label="View cart">
           <div className="indicator">
             <CiShoppingCart className="w-6 h-6" aria-hidden="true" />
             <span className="badge badge-sm badge-warning indicator-item text-slate-900 font-semibold">{cart?.length || 0}</span>
           </div>
         </NavLink>
-        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications">
+
+        {/* notifications */}
+        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications" aria-label="Notifications">
           <div className="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> 
@@ -69,39 +79,64 @@ const NavBar = () => {
           </div>
         </button>
 
-        {/* User avatar dropdown (supports users object or array) */}
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost btn-circle avatar online">
-            <div className="w-10 rounded-full border-2 border-orange-400 overflow-hidden">
-              {(() => {
-                const u = Array.isArray(users) ? users[0] : users;
-                const photo = u?.avatar || u?.photoURL || u?.image;
-                const name = u?.name || u?.displayName || u?.email;
-                if (photo) {
-                  return <img src={photo} alt={name || 'User'} />;
-                }
-                const initial = name ? String(name).charAt(0).toUpperCase() : 'U';
-                return <div className="w-full h-full flex items-center justify-center bg-slate-600 text-white text-lg">{initial}</div>;
-              })()}
-            </div>
-          </label>
-          <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-slate-800 rounded-box w-52 text-white">
-            <li className="px-2 py-1">
-              <div className="text-sm font-semibold">
-                {(() => {
-                  const u = Array.isArray(users) ? users[0] : users;
-                  return u?.name || u?.displayName || u?.email || 'User';
-                })()}
-              </div>
-            </li>
-            <li><NavLink to="/profile" className="text-white">Profile</NavLink></li>
-            <li><NavLink to="/orders" className="text-white">Orders</NavLink></li>
-            <li><NavLink to="/login" onClick={handleSignOut} className="text-white">Sign Out</NavLink></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  )
-}
+        {/* Auth-aware avatar / actions */}
+        {user ? (
+          <div className="relative">
+            <div className="dropdown dropdown-end">
+              <button aria-haspopup="true" className="flex items-center gap-3 px-2 py-1 rounded hover:bg-slate-700 transition" tabIndex={0}>
+                <div className="w-10 h-10 rounded-full border-2 border-orange-400 overflow-hidden shadow-sm flex-shrink-0">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName || user.email} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-slate-600 text-white text-lg">
+                      {String(user.displayName || user.email || 'U').charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div className="hidden md:flex flex-col text-left truncate">
+                  <span className="text-sm font-medium leading-4">{user.displayName || user.email}</span>
+                  <span className="text-xs text-slate-300">{user.email}</span>
+                </div>
+                <svg className="w-3 h-3 text-white ml-1 hidden md:block" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 011.12 1l-4.25 4.65a.75.75 0 01-1.12 0L5.25 8.27a.75.75 0 01-.02-1.06z" clipRule="evenodd" />
+                </svg>
+              </button>
 
-export default NavBar
+              <ul tabIndex={0} className="dropdown-content mt-3 p-2 shadow-lg bg-slate-800 rounded-lg w-56 text-white z-50">
+                <li className="px-3 py-2 border-b border-slate-700">
+                  <div className="text-sm font-semibold truncate">{user.displayName || user.email}</div>
+                  <div className="text-xs text-slate-400 truncate">{user.email}</div>
+                </li>
+                <li>
+                  <NavLink to="/profile" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-700 rounded">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <span className="text-sm">Profile</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/orders" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-700 rounded">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5" /></svg>
+                    <span className="text-sm">Orders</span>
+                  </NavLink>
+                </li>
+                <li className="mt-2">
+                  <button onClick={handleSignOut} className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-red-600 hover:text-white transition-colors">
+                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7" /></svg>
+                    <span className="text-sm">Sign Out</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-3">
+            <NavLink to="/login" className="px-3 py-1 rounded hover:bg-slate-700 transition">Sign in</NavLink>
+            <NavLink to="/register" className="px-3 py-1 rounded bg-orange-500 text-white hover:bg-orange-600 transition">Register</NavLink>
+          </div>
+        )}
+      </div>
+     </div>
+   )
+ }
+ 
+ export default NavBar
