@@ -1,11 +1,19 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import useCart from '../Hooks/useCart';
 import { CiShoppingCart } from "react-icons/ci";
+import AllUser from '../Hooks/AllUser';
+import AuthProvider, { AuthContext } from './provider/AuthProvider';
 
 const NavBar = () => {
   const {cart,refetch}=useCart();
-  console.log('your cart',cart);
+  const {users}=AllUser();
+  const navigate=useNavigate();
+  const {signOut}=useContext(AuthContext);
+ const handleSignOut=()=>{
+  signOut();
+  // navigate('/login');
+ }
   return (
     <div className="navbar bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg text-white">
       <div className="navbar-start">
@@ -60,10 +68,36 @@ const NavBar = () => {
             <span className="badge badge-xs badge-error indicator-item">0</span>
           </div>
         </button>
-        <div className="avatar online">
-          <div className="w-10 rounded-full border-2 border-orange-400">
-            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Admin" />
-          </div>
+
+        {/* User avatar dropdown (supports users object or array) */}
+        <div className="dropdown dropdown-end">
+          <label tabIndex={0} className="btn btn-ghost btn-circle avatar online">
+            <div className="w-10 rounded-full border-2 border-orange-400 overflow-hidden">
+              {(() => {
+                const u = Array.isArray(users) ? users[0] : users;
+                const photo = u?.avatar || u?.photoURL || u?.image;
+                const name = u?.name || u?.displayName || u?.email;
+                if (photo) {
+                  return <img src={photo} alt={name || 'User'} />;
+                }
+                const initial = name ? String(name).charAt(0).toUpperCase() : 'U';
+                return <div className="w-full h-full flex items-center justify-center bg-slate-600 text-white text-lg">{initial}</div>;
+              })()}
+            </div>
+          </label>
+          <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-slate-800 rounded-box w-52 text-white">
+            <li className="px-2 py-1">
+              <div className="text-sm font-semibold">
+                {(() => {
+                  const u = Array.isArray(users) ? users[0] : users;
+                  return u?.name || u?.displayName || u?.email || 'User';
+                })()}
+              </div>
+            </li>
+            <li><NavLink to="/profile" className="text-white">Profile</NavLink></li>
+            <li><NavLink to="/orders" className="text-white">Orders</NavLink></li>
+            <li><NavLink to="/login" onClick={handleSignOut} className="text-white">Sign Out</NavLink></li>
+          </ul>
         </div>
       </div>
     </div>
