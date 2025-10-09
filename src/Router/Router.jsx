@@ -10,7 +10,7 @@ import Blog from '../pages/Home/Blog'
 import SpecialOffer from '../pages/Home/SpecialOffer'
 import AddMenu from '../pages/AddMenu'
 import MenuCartDetails from '../pages/MenuCartDetails'
-import ChefDashboard from '../pages/Dashboard/ChefDashboard'
+import ChefDashboard from '../pages/Dashboard/Dashboard'
 import OrderCard from '../components/OrderCard'
 import Login from '../pages/Login'
 import Register from '../pages/Home/Register'
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
         element:<MenuCartDetails></MenuCartDetails>
       },
       {
-        path:'chefdashboard',
+        path:'dashboard',
         element:<ChefDashboard></ChefDashboard>
       },
       {

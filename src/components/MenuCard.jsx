@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import NavBar from "./NavBar";
 import useAxiosPublic from "../Hooks/AxiousPublic";
 import useCart from "../Hooks/useCart";
 import Swal from "sweetalert2";
+import { AuthContext } from "./provider/AuthProvider";
 
 const MenuCard = () => {
     const {refetch}=useCart();
@@ -11,6 +12,7 @@ const MenuCard = () => {
   const [menuData, setMenuData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {user}=useContext(AuthContext);
 
   useEffect(() => {
     setLoading(true);
@@ -45,7 +47,7 @@ const MenuCard = () => {
   }
   const handleCart = (item) => {
     const cartItem={productId:item._id, name: item.name, price: item.price, image: item.image, discount: item.discount, quantity: 1};
-    axiosPublic.post('/menucart', cartItem )
+    axiosPublic.post(`/menucart?email=${user?.email}`, cartItem )
     .then((res) => {
         refetch();
       Swal.fire({

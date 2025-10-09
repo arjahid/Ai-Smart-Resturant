@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import useCart from '../Hooks/useCart';
 import useAxiosPublic from '../Hooks/AxiousPublic';
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
 import NavBar from '../components/NavBar';
+import { AuthContext } from '../components/provider/AuthProvider';
 
 const MenuCartDetails = () => {
 	// support multiple return shapes from useCart
@@ -13,6 +14,7 @@ const MenuCartDetails = () => {
 	const refetch = cartData?.refetch ?? cartData?.ref ?? (Array.isArray(cartData) ? cartData[1] : undefined);
 	const isLoading = cartData?.isLoading ?? false;
 	const error = cartData?.error ?? null;
+	const {user}=useContext(AuthContext);
 
 	const axiosPublic = useAxiosPublic();
 	const [placingOrder, setPlacingOrder] = useState(false);
@@ -167,8 +169,10 @@ const MenuCartDetails = () => {
 				total: totals.totalAfterDiscount,
 				createdAt: new Date().toISOString()
 			};
+			 const email=user?.email;
+			
 
-			const res = await axiosPublic.post('/orders', orderPayload);
+			const res = await axiosPublic.post(`/orders?email=${email}`, orderPayload);
 			if (!(res.status >= 200 && res.status < 300)) {
 				throw new Error('Order creation failed');
 			}

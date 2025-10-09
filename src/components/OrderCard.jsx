@@ -19,6 +19,7 @@ const formatCurrency = (v) => `৳${Number(v || 0).toFixed(2)}`;
 
 const OrderCard = () => {
 	const { orders = [] } = useOrder() || { orders: [] };
+	console.log('orders', orders);
 
 	return (
 		<div className="py-6">
