@@ -1,10 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../components/provider/AuthProvider';
 
 const Login = () => {
     const { signIn } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const message = location.state?.message || '';
+    const from = location.state?.from?.pathname || '/';
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -19,8 +22,8 @@ const Login = () => {
         try {
             const result = await signIn(email, password);
             console.log('Signed in user:', result.user);
-            alert('Login Successful');
-            navigate('/');
+           
+            navigate(from, { replace: true });
         } catch (err) {
             console.error('Login error:', err);
             setError(err?.message || 'Login failed. Please try again.');
@@ -39,6 +42,13 @@ const Login = () => {
                                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
                                 <p className="text-gray-600 text-sm sm:text-base">Sign in to your account</p>
                             </div>
+
+                            
+                            {message && (
+                                <div className="mb-4 text-sm text-red-800 bg-red-50 p-3 rounded">
+                                    {message}
+                                </div>
+                            )}
 
                             {error && (
                                 <div className="mb-4 text-sm text-red-700 bg-red-50 p-3 rounded">

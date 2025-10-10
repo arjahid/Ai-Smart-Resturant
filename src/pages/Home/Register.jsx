@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../components/provider/AuthProvider';
 import Swal from 'sweetalert2';
 
 const Register = () => {
 	const { createUser, updateUserProfile, axiosPublic } = useContext(AuthContext);
-	const navigate = useNavigate();
+	const navigate=useNavigate();
+	const location=useLocation();
+	const from=location.state?.from?.pathname || '/';
 
 	const [form, setForm] = useState({
 		name: '',
@@ -66,7 +68,7 @@ const Register = () => {
 				}
 
 				await Swal.fire({ icon: 'success', title: 'Registered', text: 'Account created successfully.' });
-				navigate('/');
+				navigate(from, {replace:true});
 			}
 		} catch (err) {
 			console.error(err);

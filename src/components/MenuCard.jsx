@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import useAxiosPublic from "../Hooks/AxiousPublic";
 import useCart from "../Hooks/useCart";
@@ -13,6 +13,8 @@ const MenuCard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const {user}=useContext(AuthContext);
+  const navigate=useNavigate();
+ 
 
   useEffect(() => {
     setLoading(true);
@@ -46,6 +48,14 @@ const MenuCard = () => {
     );
   }
   const handleCart = (item) => {
+    if(!user){
+      Swal.fire({
+        title: "Please login to add items to cart",
+        
+      });
+      navigate('/login');
+      return;
+    }
     const cartItem={productId:item._id, name: item.name, price: item.price, image: item.image, discount: item.discount, quantity: 1};
     axiosPublic.post(`/menucart?email=${user?.email}`, cartItem )
     .then((res) => {

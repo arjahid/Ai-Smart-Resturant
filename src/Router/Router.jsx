@@ -15,6 +15,9 @@ import OrderCard from '../components/OrderCard'
 import Login from '../pages/Login'
 import Register from '../pages/Home/Register'
 import Profile from '../pages/Profile'
+import PrivateRouter from './PrivateRouter'
+import Dashboard from '../pages/Dashboard/Dashboard'
+import ChefRouter from './ChefRouter'
 
 const router = createBrowserRouter([
   {
@@ -44,19 +47,17 @@ const router = createBrowserRouter([
       },
       {
         path:'addmenu',
-        element:<AddMenu></AddMenu>
+        // element:<ChefRouter><PrivateRouter><AddMenu></AddMenu></PrivateRouter></ChefRouter>
+        element:<ChefRouter><AddMenu></AddMenu></ChefRouter>
       },
       {
         path:'cart',
         element:<MenuCartDetails></MenuCartDetails>
       },
-      {
-        path:'dashboard',
-        element:<ChefDashboard></ChefDashboard>
-      },
+    
       {
         path:'orders',
-        element:<OrderCard></OrderCard>
+        element:<PrivateRouter><OrderCard></OrderCard></PrivateRouter>
       },
       {
         path:'login',
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path:'profile',
         element:<Profile></Profile>
+      },
+      {
+        path:'dashboard',
+        element:<PrivateRouter><Dashboard></Dashboard></PrivateRouter>
       }
     ]
   }
