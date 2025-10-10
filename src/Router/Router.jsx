@@ -18,6 +18,8 @@ import Profile from '../pages/Profile'
 import PrivateRouter from './PrivateRouter'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import ChefRouter from './ChefRouter'
+import AdminDashboard from '../pages/Dashboard/AdminDashboard' // added
+import User from '../pages/Dashboard/Admin/User'
 
 const router = createBrowserRouter([
   {
@@ -73,7 +75,23 @@ const router = createBrowserRouter([
       },
       {
         path:'dashboard',
-        element:<PrivateRouter><Dashboard></Dashboard></PrivateRouter>
+        element:<PrivateRouter><Dashboard></Dashboard></PrivateRouter>,
+      },
+
+      // admin parent route with nested children (renders into AdminDashboard's <Outlet />)
+      {
+        path: 'admin',
+        element: (
+          <PrivateRouter>
+            <AdminDashboard />
+          </PrivateRouter>
+        ),
+        children: [
+          { index: true, element: <div className="p-4">Welcome to Admin Dashboard</div> },
+          { path: 'users', element: <div className="p-4">Admin — Users management (replace with real component)<User></User></div> },
+          { path: 'orders', element: <div className="p-4">Admin — Orders management (replace with real component)</div> },
+          { path: 'reports', element: <div className="p-4">Admin — Reports (replace with real component)</div> },
+        ]
       }
     ]
   }
