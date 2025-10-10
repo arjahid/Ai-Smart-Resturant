@@ -62,7 +62,7 @@ const NavBar = () => {
               <>
                 <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink></li>
                 <li><NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink></li>
-                <li><NavLink to="/manageorders" className="text-white hover:bg-slate-700 hover:text-orange-400">📦 Manage Orders</NavLink></li>
+                <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink></li>
               </>
             )}
 
@@ -114,7 +114,7 @@ const NavBar = () => {
               <>
     <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
               <NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink>
-              <NavLink to="/manageorders" className="text-white hover:bg-slate-700 hover:text-orange-400">📦 Manage Orders</NavLink>
+              <NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink>
               </>
             )
           }
@@ -134,17 +134,43 @@ const NavBar = () => {
             )}
         </div>
       </div>
+
+      {/* search form on next line */}
+     <div className="w-full flex justify-center mt-2">
+       <form
+         onSubmit={(e) => {
+           e.preventDefault();
+           const q = e.target.search?.value?.trim() || '';
+           navigate(`/menu${q ? `?search=${encodeURIComponent(q)}` : ''}`);
+         }}
+         className="w-full max-w-xl px-4"
+       >
+         <div className="relative">
+           <input
+             name="search"
+             type="text"
+             placeholder="Search menu items..."
+             className="w-full py-2 pl-10 pr-4 rounded-full bg-slate-700 text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+           />
+           <button
+             type="submit"
+             aria-label="Search"
+             className="absolute left-2 top-1/2 -translate-y-1/2 text-white"
+           >
+             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+             </svg>
+           </button>
+         </div>
+       </form>
+     </div>
+
       <div className="navbar-end space-x-2">
-        {/* search */}
-        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Search Menu" aria-label="Search">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /> 
-          </svg>
-        </button>
+       
 
         {/* cart */}
         {
-          role==='user' && ( <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Cart" aria-label="View cart">
+          role==='customer' && ( <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Cart" aria-label="View cart">
           <div className="indicator">
             <CiShoppingCart className="w-6 h-6" aria-hidden="true" />
             <span className="badge badge-sm badge-warning indicator-item text-slate-900 font-semibold">{cart?.length || 0}</span>
@@ -219,7 +245,9 @@ const NavBar = () => {
           </div>
         )}
       </div>
+      
      </div>
+     
    )
  }
  

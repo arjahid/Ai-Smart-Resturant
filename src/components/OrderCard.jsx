@@ -24,7 +24,7 @@ const OrderCard = () => {
 	return (
 		<div className="py-6">
             <NavBar></NavBar>
-			<h2 className="text-3xl font-bold text-center my-6">
+			<h2 className="text-3xl font-bold text-center my-6 mt-14">
 				Your Orders <span className="text-base font-normal text-gray-500">({orders.length})</span>
 			</h2>
 
