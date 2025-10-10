@@ -3,11 +3,20 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import useCart from '../Hooks/useCart';
 import { CiShoppingCart } from "react-icons/ci";
 import { AuthContext } from './provider/AuthProvider';
+import useRole from '../Hooks/useRole';
 
 const NavBar = () => {
   const {cart,refetch}=useCart();
   const navigate = useNavigate();
   const { user, signOut } = useContext(AuthContext);
+  const {role,loading}=useRole();
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner text-orange-600 loading-lg"></span>
+      </div>
+    );
+  }
 
   const handleSignOut = async () => {
     try {
@@ -20,7 +29,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="navbar bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg text-white">
+    <div className="navbar bg-gradient-to-r from-slate-900 to-slate-800 shadow-lg text-white fixed top-0 z-50 w-11/12">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle text-white hover:bg-slate-700">
@@ -30,12 +39,47 @@ const NavBar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-slate-800 rounded-box z-[1] mt-3 w-60 p-2 shadow-xl border border-slate-600">
-            <NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink>
-            <NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink>
-            <NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</NavLink>
-            <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
-            <NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink>
+            className="menu menu-sm dropdown-content bg-slate-800 rounded-box z-[1] mt-3 w-60 p-2 shadow-xl border border-slate-600"
+          >
+            
+            {role === 'customer' && (
+              <>
+                <li><NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink></li>
+                <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink></li>
+                <li><NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</NavLink></li>
+                <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink></li>
+              </>
+            )}
+
+            {role === 'chef' && (
+              <>
+                <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink></li>
+                <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink></li>
+              </>
+            )}
+
+            {role === 'admin' && (
+              <>
+                <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink></li>
+                <li><NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink></li>
+                <li><NavLink to="/manageorders" className="text-white hover:bg-slate-700 hover:text-orange-400">📦 Manage Orders</NavLink></li>
+              </>
+            )}
+
+            {!role && (
+              <>
+                <li>
+                  <NavLink to="/" className="block w-full text-white px-3 py-2 rounded hover:bg-slate-700 hover:text-orange-400">
+                    🏠 Home
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/menu" className="block w-full text-white px-3 py-2 rounded hover:bg-slate-700 hover:text-orange-400">
+                    🍽️ Menu
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -43,14 +87,51 @@ const NavBar = () => {
         <NavLink to="/" className="btn btn-ghost text-2xl font-bold text-white hover:text-orange-400 normal-case mr-8">
           <span className="text-orange-400">🤖</span> AI Smart Restaurant
         </NavLink>
-        <div className="hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 space-x-2">
-            <li><NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🏠 Home</NavLink></li>
-            <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">🍽️ Menu</NavLink></li>
-            <li><NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">📋 Orders</NavLink></li>
-            <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">➕ Add Menu</NavLink></li>
-            <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400 rounded-lg px-3 py-2">⚙️ Dashboard</NavLink></li>
-          </ul>
+        <div className="hidden lg:flex gap-2">
+           {/* <li><NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink></li>
+                <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink></li> */}
+                
+          {
+            role === 'customer' && (
+              <>
+                <NavLink to="/" className="text-white hover:bg-slate-700 hover:text-orange-400">🏠 Home</NavLink>
+            <NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink>
+            <NavLink to="/orders" className="text-white hover:bg-slate-700 hover:text-orange-400">📋 Orders</NavLink>
+              <NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink>
+              </>
+            )
+          }
+          {
+            role ==='chef'&& (
+              <>
+                <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink></li>
+               <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
+              </>
+            )
+          }
+          {
+            role === 'admin' &&(
+              <>
+    <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
+              <NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink>
+              <NavLink to="/manageorders" className="text-white hover:bg-slate-700 hover:text-orange-400">📦 Manage Orders</NavLink>
+              </>
+            )
+          }
+           {!role && (
+              <>
+                <li>
+                  <NavLink to="/" className="block w-full text-white px-3 py-2 rounded hover:bg-slate-700 hover:text-orange-400">
+                    🏠 Home
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/menu" className="block w-full text-white px-3 py-2 rounded hover:bg-slate-700 hover:text-orange-400">
+                    🍽️ Menu
+                  </NavLink>
+                </li>
+              </>
+            )}
         </div>
       </div>
       <div className="navbar-end space-x-2">
@@ -62,12 +143,15 @@ const NavBar = () => {
         </button>
 
         {/* cart */}
-        <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Cart" aria-label="View cart">
+        {
+          role==='user' && ( <NavLink to='/cart' className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Cart" aria-label="View cart">
           <div className="indicator">
             <CiShoppingCart className="w-6 h-6" aria-hidden="true" />
             <span className="badge badge-sm badge-warning indicator-item text-slate-900 font-semibold">{cart?.length || 0}</span>
           </div>
-        </NavLink>
+        </NavLink>)
+        }
+       
 
         {/* notifications */}
         <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications" aria-label="Notifications">

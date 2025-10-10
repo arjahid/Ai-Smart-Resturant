@@ -1,3 +1,4 @@
+import NavBar from "../../components/NavBar";
 import useRole from "../../Hooks/useRole";
 import AdminDashboard from "./AdminDashboard";
 import ChefDashboard from "./ChefDashboard";
@@ -14,6 +15,7 @@ const Dashboard = () => {
 	if(role ==='customer') return <UserDashboard></UserDashboard>
 	return (
 		<div>
+			
 			<h1>Dashboard</h1>
 		</div>
 	);

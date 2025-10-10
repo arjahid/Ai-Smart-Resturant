@@ -17,11 +17,10 @@ const ChefRouter = ({ children }) => {
   }
 
   
-  if (!user || role !== 'chef') {
-    return <Navigate to="/login" state={{ from: location ,message:'You are not authorized to access this page'}} replace />;
+  if (!user || (role !== 'chef' && role !== 'admin')) {
+    return <Navigate to='/login' state={{from: location,message:'You are not authorized to access this page'}} replace />
   }
 
-  
   return children;
 };
 

@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import useOrder from '../../Hooks/useOrder';
 import useAxiosPublic from '../../Hooks/AxiousPublic';
 import Swal from 'sweetalert2';
+import NavBar from '../../components/NavBar';
 
 const statusClass = (s) => {
 	if (!s) return 'bg-gray-100 text-gray-800';
@@ -50,7 +51,8 @@ const UserDashboard = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50 py-8">
-			<div className="max-w-5xl mx-auto px-4">
+			<NavBar></NavBar>
+			<div className="max-w-5xl mx-auto px-4 mt-14">
 				<header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-900">My Dashboard</h1>

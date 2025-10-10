@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       },
       {
         path:'cart',
-        element:<MenuCartDetails></MenuCartDetails>
+        element:<PrivateRouter><MenuCartDetails></MenuCartDetails></PrivateRouter>
       },
     
       {
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
       },
       {
         path:'profile',
-        element:<Profile></Profile>
+        element:<PrivateRouter><Profile></Profile></PrivateRouter>
       },
       {
         path:'dashboard',

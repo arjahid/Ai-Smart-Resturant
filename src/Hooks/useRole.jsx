@@ -10,7 +10,12 @@ const useRole = () => {
 
   useEffect(() => {
     
-    if (!user?.email) return;
+    if (!user?.email) {
+      setRole(null);
+      setLoading(false);
+      return;
+    }
+    // setLoading(true);
 
     const fetchRole = async () => {
       try {
@@ -25,7 +30,7 @@ const useRole = () => {
     };
 
     fetchRole();
-  }, [user, axiosPublic]);
+  }, [user?.email, axiosPublic]);
 
   return { role, loading };
 };
