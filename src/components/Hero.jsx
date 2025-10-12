@@ -1,5 +1,6 @@
 import React from 'react';
 import images from '../assets/images/Restaurant-Food-PNG.png'
+import { NavLink } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -26,9 +27,9 @@ const Hero = () => {
             personalized recommendations, and seamless service that adapts to your preferences.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="btn btn-primary btn-lg px-8 py-3 text-lg font-semibold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-none shadow-lg transform hover:scale-105 transition-all duration-300">
+            <NavLink to='/menu' className="btn btn-primary btn-lg px-8 py-3 text-lg font-semibold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-none shadow-lg transform hover:scale-105 transition-all duration-300">
               🍽️ Order Now
-            </button>
+            </NavLink>
             <button className="btn btn-outline btn-lg px-8 py-3 text-lg font-semibold text-white border-white hover:bg-white hover:text-black shadow-lg transform hover:scale-105 transition-all duration-300">
               📋 View Menu
             </button>

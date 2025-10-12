@@ -5,11 +5,14 @@ import { CiShoppingCart } from "react-icons/ci";
 import { AuthContext } from './provider/AuthProvider';
 import useRole from '../Hooks/useRole';
 
+
 const NavBar = () => {
   const {cart,refetch}=useCart();
   const navigate = useNavigate();
   const { user, signOut } = useContext(AuthContext);
   const {role,loading}=useRole();
+ 
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -61,7 +64,7 @@ const NavBar = () => {
             {role === 'admin' && (
               <>
                 <li><NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink></li>
-                <li><NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink></li>
+                <li><NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Menu</NavLink></li>
                 <li><NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink></li>
               </>
             )}
@@ -113,7 +116,7 @@ const NavBar = () => {
             role === 'admin' &&(
               <>
     <NavLink to="/addmenu" className="text-white hover:bg-slate-700 hover:text-orange-400">➕ Add Menu</NavLink>
-              <NavLink to="/manageusers" className="text-white hover:bg-slate-700 hover:text-orange-400">👥 Manage Users</NavLink>
+              <NavLink to="/menu" className="text-white hover:bg-slate-700 hover:text-orange-400">🍽️ Menu</NavLink>
               <NavLink to="/dashboard" className="text-white hover:bg-slate-700 hover:text-orange-400">⚙️ Dashboard</NavLink>
               </>
             )
@@ -180,7 +183,9 @@ const NavBar = () => {
        
 
         {/* notifications */}
-        <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications" aria-label="Notifications">
+        {
+          (role === 'chef' || role ==='admin') && <>
+           <button className="btn btn-ghost btn-circle text-white hover:bg-slate-700 hover:text-orange-400 tooltip tooltip-bottom" data-tip="Notifications" aria-label="Notifications">
           <div className="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> 
@@ -188,6 +193,9 @@ const NavBar = () => {
             <span className="badge badge-xs badge-error indicator-item">0</span>
           </div>
         </button>
+          </>
+        }
+       
 
         {/* Auth-aware avatar / actions */}
         {user ? (

@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../components/provider/AuthProvider';
+import useRole from '../Hooks/useRole';
 
 const Login = () => {
-    const { signIn } = useContext(AuthContext);
+    const { signIn, } = useContext(AuthContext);
     const navigate = useNavigate();
-    const location = useLocation();
-    const message = location.state?.message || '';
-    const from = location.state?.from?.pathname || '/';
+    // const location = useLocation();
+    // const message = location.state?.message || '';
+    // const from = location.state?.from?.pathname || '/';
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+  
 
     const handleForm = async (e) => {
         e.preventDefault();
@@ -23,7 +25,9 @@ const Login = () => {
             const result = await signIn(email, password);
             console.log('Signed in user:', result.user);
            
-            navigate(from, { replace: true });
+           
+            // navigate(from, { replace: true });
+            navigate('/');
         } catch (err) {
             console.error('Login error:', err);
             setError(err?.message || 'Login failed. Please try again.');
@@ -44,11 +48,11 @@ const Login = () => {
                             </div>
 
                             
-                            {message && (
+                            {/* {message && (
                                 <div className="mb-4 text-sm text-red-800 bg-red-50 p-3 rounded">
                                     {message}
                                 </div>
-                            )}
+                            )} */}
 
                             {error && (
                                 <div className="mb-4 text-sm text-red-700 bg-red-50 p-3 rounded">

@@ -8,6 +8,21 @@ import Swal from 'sweetalert2';
 const labelFor = (s) => (s || '').toString().split('_').map(w => w[0]?.toUpperCase()+w.slice(1)).join(' ');
 const formatCurrency = v => `৳${Number(v || 0).toFixed(2)}`;
 
+// small helper to map status -> badge classes
+const statusBadge = (s) => {
+	if (!s) return 'bg-gray-100 text-gray-800';
+	switch (s.toLowerCase()) {
+		case 'pending': return 'bg-yellow-100 text-yellow-800';
+		case 'in_progress': return 'bg-blue-100 text-blue-800';
+		case 'preparing': return 'bg-blue-200 text-blue-900';
+		case 'cooking': return 'bg-orange-100 text-orange-800';
+		case 'ready': return 'bg-indigo-100 text-indigo-800';
+		case 'completed': return 'bg-green-100 text-green-800';
+		case 'cancelled': return 'bg-red-100 text-red-800';
+		default: return 'bg-gray-100 text-gray-800';
+	}
+};
+
 const ChefDashboard = () => {
 	const { user } = useContext(AuthContext);
 	const axiosPublic = useAxiosPublic();
@@ -29,7 +44,6 @@ const ChefDashboard = () => {
 			const data = res?.data;
 			setOrders(Array.isArray(data) ? data : (data?.orders ?? []));
 		} catch (err) {
-			// console.error('Failed to fetch chef orders', err);
 			setError(err?.response?.data?.message || err.message || 'Failed to load orders');
 		} finally {
 			if (mountedRef.current) setLoading(false);
@@ -129,10 +143,27 @@ const ChefDashboard = () => {
 			<div className="max-w-6xl mx-auto px-4 py-8 mt-14">
 				<header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
 					<div>
-						<h1 className="text-3xl font-bold text-gray-900">Chef Dashboard</h1>
-						<p className="text-sm text-gray-500 mt-1">Manage kitchen orders</p>
+						<h1 className="text-3xl font-extrabold text-gray-900">Chef Dashboard</h1>
+						<p className="text-sm text-gray-500 mt-1">Manage incoming orders and kitchen progress</p>
 					</div>
-					
+
+					<div className="flex items-center gap-3">
+						<button
+							onClick={fetchOrders}
+							className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded shadow-sm hover:shadow-md text-sm"
+							aria-label="Refresh orders"
+						>
+							Refresh
+						</button>
+						<div className="hidden sm:flex items-center gap-3">
+							<div className="text-xs text-gray-500">Total</div>
+							<div className="px-3 py-1 rounded-full bg-slate-100 text-slate-800 font-semibold">{stats.total}</div>
+							<div className="text-xs text-gray-500">Preparing</div>
+							<div className="px-3 py-1 rounded-full bg-blue-50 text-blue-800 font-semibold">{stats.preparing}</div>
+							<div className="text-xs text-gray-500">Completed</div>
+							<div className="px-3 py-1 rounded-full bg-green-50 text-green-800 font-semibold">{stats.completed}</div>
+						</div>
+					</div>
 				</header>
 
 				<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -168,21 +199,32 @@ const ChefDashboard = () => {
 							const id = order._id || order.id;
 							const status = (order.status || 'unknown').toLowerCase();
 							const items = Array.isArray(order.items) ? order.items : order.items ? [order.items] : [];
-							const first = items[0] || null;
 							const total = order.total ?? items.reduce((s,it) => s + (Number(it.price||it.cost||0)*(it.qty||1)), 0);
+							// join all item names (fall back to a generic label)
+							const itemNames = items.map(it => it?.name || it?.title || 'Item').filter(Boolean).join(', ');
+
 							return (
-								<li key={id} className="flex items-center justify-between p-3 border rounded">
+								<li key={id} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-sm transition">
 									<div className="flex items-center gap-4 min-w-0">
-										<div className="w-12 h-12 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
-											{first?.image ? <img src={first.image} alt={first.name} className="w-full h-full object-cover" /> : <span className="text-xl">🍽️</span>}
+										<div className="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center shrink-0">
+											{items[0]?.image ? <img src={items[0].image} alt={items[0].name} className="w-full h-full object-cover" /> : <span className="text-xl">🍽️</span>}
 										</div>
 										<div className="min-w-0">
 											<div className="text-sm font-medium text-gray-900 truncate">Order #{String(id).slice(0,8)}</div>
-											<div className="text-xs text-gray-500 truncate">{first?.name ? `${first.name} • ${items.length} item(s)` : `${items.length} item(s)`}</div>
+											{/* show all item names (wrapping) and a separate item count */}
+											<div className="text-xs text-gray-500 mt-1 break-words">
+												{itemNames}
+											</div>
+											<div className="text-xs text-gray-400 mt-1">{items.length} item(s)</div>
 										</div>
 									</div>
 
-									<div className="flex items-center gap-3">
+									<div className="flex items-center gap-4">
+										{/* status badge + select */}
+										<div className={`px-3 py-1 rounded-full text-xs font-medium ${statusBadge(status)}`}>
+											{labelFor(status)}
+										</div>
+
 										<select
 											value={status}
 											onChange={(e) => handleUpdateStatus(id, e.target.value)}
@@ -197,7 +239,7 @@ const ChefDashboard = () => {
 
 										<div className="text-right">
 											<div className="text-sm font-bold text-orange-600">{formatCurrency(total)}</div>
-											<div className="flex items-center justify-end gap-3">
+											<div className="flex items-center justify-end gap-3 mt-2">
 												<button
 													onClick={() => handleRemove(id)}
 													disabled={removingId === id}

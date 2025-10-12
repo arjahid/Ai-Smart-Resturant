@@ -9,28 +9,41 @@ const useRole = () => {
   const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
-    
+    let isMounted = true; 
+
     if (!user?.email) {
       setRole(null);
       setLoading(false);
       return;
     }
-    // setLoading(true);
+
+    
+    setLoading(true);
 
     const fetchRole = async () => {
       try {
         const res = await axiosPublic.get(`/users/role/${user.email}`);
-        setRole(res.data.role);
+        if (isMounted) {
+          setRole(res.data.role);
+        }
       } catch (err) {
-        console.error("Error fetching user role:", err);
-        setRole(null);
+        console.error('Error fetching user role:', err);
+        if (isMounted) {
+          setRole(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchRole();
-  }, [user?.email, axiosPublic]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.email]); 
 
   return { role, loading };
 };

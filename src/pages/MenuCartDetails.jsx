@@ -178,18 +178,18 @@ const MenuCartDetails = () => {
 			}
 
 			// Try bulk clear cart endpoint first
-			try {
-				await axiosPublic.delete('/menucart'); // backend may clear all cart items
-			} catch (bulkErr) {
-				// fallback: delete each cart entry individually
-				await Promise.all(
-					itemsWithPrices.map(it => {
-						const idToDelete = it.cartId || it.id;
-						if (!idToDelete) return Promise.resolve();
-						return axiosPublic.delete(`/menucart/${idToDelete}`).catch(()=>{});
-					})
-				);
-			}
+			// try {
+			// 	await axiosPublic.delete('/menucart'); // backend may clear all cart items
+			// } catch (bulkErr) {
+			// 	// fallback: delete each cart entry individually
+			// 	await Promise.all(
+			// 		itemsWithPrices.map(it => {
+			// 			const idToDelete = it.cartId || it.id;
+			// 			if (!idToDelete) return Promise.resolve();
+			// 			return axiosPublic.delete(`/menucart/${idToDelete}`).catch(()=>{});
+			// 		})
+			// 	);
+			// }
 
 			if (typeof refetch === 'function') await refetch();
 

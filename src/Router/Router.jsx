@@ -20,6 +20,9 @@ import Dashboard from '../pages/Dashboard/Dashboard'
 import ChefRouter from './ChefRouter'
 import AdminDashboard from '../pages/Dashboard/AdminDashboard' // added
 import User from '../pages/Dashboard/Admin/User'
+import Order from '../pages/Dashboard/Admin/Order'
+import Recommand from '../pages/Recommand'
+// import FoodRecommendation from '../AI-Recommand/Recommandation'
 
 const router = createBrowserRouter([
   {
@@ -66,9 +69,14 @@ const router = createBrowserRouter([
         element:<Login></Login>
       },
       {
+        path:'ai',
+        element:<Recommand></Recommand>
+      },
+      {
         path:'register',
         element:<Register></Register>
       },
+     
       {
         path:'profile',
         element:<PrivateRouter><Profile></Profile></PrivateRouter>
@@ -88,8 +96,8 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <div className="p-4">Welcome to Admin Dashboard</div> },
-          { path: 'users', element: <div className="p-4">Admin — Users management (replace with real component)<User></User></div> },
-          { path: 'orders', element: <div className="p-4">Admin — Orders management (replace with real component)</div> },
+          { path: 'users', element: <div className="p-4"><User></User></div> },
+          { path: 'orders', element: <div className="p-4">Admin — Orders management (replace with real component) <Order></Order> </div> },
           { path: 'reports', element: <div className="p-4">Admin — Reports (replace with real component)</div> },
         ]
       }
