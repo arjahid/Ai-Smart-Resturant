@@ -205,7 +205,9 @@ const MenuCartDetails = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50 py-8">
-            <NavBar></NavBar>
+            <div className='pb-6'>
+				<NavBar></NavBar>
+			</div>
 			<div className="max-w-5xl mx-auto px-4 mt-4">
 				{/* Top bar with back button */}
 				<div className="flex items-center justify-between mb-6">

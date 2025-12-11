@@ -29,7 +29,7 @@ const useAxiosSecure = () => {
       (error) => {
         const status = error?.response?.status;
         if (status === 401 || status === 403) {
-          // navigate to login on auth errors
+          localStorage.removeItem("access-token");
           navigate("/login");
         }
         return Promise.reject(error);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import useAxiosPublic from '../Hooks/AxiousPublic';
 
 const AddMenu = () => {
@@ -17,7 +18,6 @@ const AddMenu = () => {
     discount: ''
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const categories = ['Starter', 'Main Course', 'Appetizer', 'Beverage', 'Dessert', 'Snack'];
 
@@ -36,10 +36,14 @@ const AddMenu = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     const v = validate();
     if (v) {
-      setError(v);
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: v,
+        confirmButtonColor: '#f97316'
+      });
       return;
     }
 
@@ -60,13 +64,28 @@ const AddMenu = () => {
 
       const res = await axiosPublic.post('/menu', payload);
       if (res.status >= 200 && res.status < 300) {
-        navigate('/menu');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Menu item added successfully',
+          confirmButtonColor: '#f97316'
+        }).then(() => navigate('/menu'));
       } else {
-        setError('Failed to add menu item. Try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to add menu item. Try again.',
+          confirmButtonColor: '#f97316'
+        });
       }
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.response?.data?.message || err.message || 'An error occurred',
+        confirmButtonColor: '#f97316'
+      });
     } finally {
       setLoading(false);
     }
@@ -76,8 +95,6 @@ const AddMenu = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow p-6 sm:p-8">
         <h2 className="text-2xl font-bold mb-4">Add Menu Item</h2>
-
-        {error && <div className="mb-4 text-sm text-red-700 bg-red-50 p-3 rounded">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
